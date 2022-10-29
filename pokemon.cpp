@@ -165,19 +165,26 @@ public:
 class Move {
 protected:
 	string moveTypeFA, moveTypeCA;
-	int damage, turns, energy_gain, energy_cost;
+	int damageFA_Rayquaza, damageFA_Mewtwo, damageCA_Rayquaza, damageCA_Mewtwo, turns, energy_gain, energy_cost;
 public:
 	Move() {
 		moveTypeFA = "0";
 		moveTypeCA = "0";
-		damage = 0;
+		damageFA_Rayquaza = 0;
+		damageFA_Mewtwo = 0;
+		damageCA_Rayquaza = 0;
+		damageCA_Mewtwo = 0;
 		turns = 0;
 		energy_gain = 0;
 		energy_cost = 0;
 	}
-
-	int getDamage() {
-		return damage;
+	Move(string moveTypeFA, string moveTypeCA, int damageFA_Rayquaza, int damageFA_Mewtwo, int damageCA_Rayquaza, int damageCA_Mewtwo) {
+		this->moveTypeFA = moveTypeFA;
+		this->moveTypeCA = moveTypeCA;
+		this->damageFA_Rayquaza = damageFA_Rayquaza;
+		this->damageFA_Mewtwo = damageFA_Mewtwo;
+		this->damageCA_Rayquaza = damageCA_Rayquaza;
+		this->damageCA_Mewtwo = damageCA_Mewtwo;
 	}
 
 	int getTurns() {
@@ -187,7 +194,8 @@ public:
 
 class FastMove : public Move {
 public:
-	int randomMewtwo, randomRayquaza, stab;
+	double stab;
+	int randomMewtwo, randomRayquaza;
 	string randomFA_Mewtwo, randomFA_Rayquaza;
 	FastMove() {
 		static string MewtwoMoveTypeFA[2] = { "Psycho Cut", "Confusion" };
@@ -197,16 +205,26 @@ public:
 		randomMewtwo = rand() % 2;
 		randomFA_Mewtwo = MewtwoMoveTypeFA[randomMewtwo];
 
-		if (randomFA_Rayquaza == "Dragon Tail")
-			stab = 0,2;
-		if (randomFA_Rayquaza == "Air Slash")
-			stab = 0,2;
-		if (randomFA_Mewtwo == "Psycho Cut")
-			stab = 0,2;
-		if (randomFA_Mewtwo == "Confusion")
-			stab = 0,2;
-	}
+		if (randomFA_Rayquaza == "Dragon Tail") {
+			stab = 0.2;
+			damageFA_Rayquaza = 15;
+		}
 
+		else if (randomFA_Rayquaza == "Air Slash") {
+			stab = 0.2;
+			damageFA_Rayquaza = 14;
+		}
+
+		if (randomFA_Mewtwo == "Psycho Cut") {
+			stab = 0.2;
+			damageFA_Mewtwo = 5;
+		}
+		else if (randomFA_Mewtwo == "Confusion") {
+			stab = 0.2;
+			damageFA_Mewtwo = 20;
+		}
+	}
+		
 	string getMoveTypeFA_Rayquaza() {
 		return randomFA_Rayquaza;
 	}
@@ -214,11 +232,20 @@ public:
 	string getMoveTypeFA_Mewtwo() {
 		return randomFA_Mewtwo;
 	}
+
+	int getDamageFA_Rayquaza() {
+		return damageFA_Rayquaza;
+	}
+
+	int getDamageFA_Mewtwo() {
+		return damageFA_Mewtwo;
+	}
 };
 
 class ChargedMove : public Move {
 public:
-	int randomRayquaza, randomMewtwo, stab;
+	double stab;
+	int randomRayquaza, randomMewtwo;
 	string randomCA_Rayquaza, randomCA_Mewtwo;
 	ChargedMove() {
 		static string MewtwoMoveTypeCA[10] = { "Flamethrower", "Ice Beam", "Thunderbolt", "Psychic", "Focus Blast", "Shadow Ball", "Hyper Beam", "Psystrike", "Frustration", "Return" };
@@ -228,24 +255,82 @@ public:
 		randomMewtwo = rand() % 10;
 		randomCA_Mewtwo = MewtwoMoveTypeCA[randomMewtwo];
 
-		if (randomCA_Rayquaza == "Aerial Ace") 
-			stab = 0,2;
-		if (randomCA_Rayquaza == "Outrage") 
-			stab = 0,2;
-		if (randomCA_Rayquaza == "Hurricane") 
-			stab = 0,2;
-		if (randomCA_Mewtwo == "Psychic") 
-			stab = 0,2;
-		if (randomCA_Rayquaza == "Psystrike")
-			stab = 0,2;
+		if (randomCA_Rayquaza == "Aerial Ace") {
+			stab = 0.2;
+			damageCA_Rayquaza = 55;
+		}
+
+		else if (randomCA_Rayquaza == "Outrage") {
+			stab = 0.2;
+			damageCA_Rayquaza = 110;
+		}
+
+		else if (randomCA_Rayquaza == "Hurricane") {
+			stab = 0.2;
+			damageCA_Rayquaza = 110;
+		}
+
+		else if (randomCA_Rayquaza == "Ancient Power") {
+			damageCA_Rayquaza = 70;
+		}
+
+		if (randomCA_Mewtwo == "Psychic") {
+			stab = 0.2;
+			damageCA_Mewtwo = 90;
+		}
+
+		else if (randomCA_Mewtwo == "Psystrike") {
+			stab = 0.2;
+			damageCA_Mewtwo = 90;
+		}
+
+		else if (randomCA_Mewtwo == "Flamethrower") {
+			damageCA_Mewtwo = 70;
+		}
+
+		else if (randomCA_Mewtwo == "Ice Beam") {
+			damageCA_Mewtwo = 90;
+		}
+
+		else if (randomCA_Mewtwo == "Thunderbolt") {
+			damageCA_Mewtwo = 80;
+		}
+
+		else if (randomCA_Mewtwo == "Focus Blast") {  
+			damageCA_Mewtwo = 140;
+		}
+
+		else if (randomCA_Mewtwo == "Shadow Ball") {
+			damageCA_Mewtwo = 100;
+		}
+
+		else if (randomCA_Mewtwo == "Hyper Beam") {
+			damageCA_Mewtwo = 150;
+		}
+
+		else if (randomCA_Mewtwo == "Frustration") {
+			damageCA_Mewtwo = 10;
+		}
+
+		else if (randomCA_Mewtwo == "Return") {
+			damageCA_Mewtwo = 35;
+		}
 	}
-	
+
 	string getRayquazaMoveTypeCA() {
 		return randomCA_Rayquaza;
 	}
 
 	string getMewtwoMoveTypeCA() {
 		return randomCA_Mewtwo;
+	}
+
+	int getDamageCA_Rayquaza() {
+		return damageCA_Rayquaza;
+	}
+
+	int getDamageCA_Mewtwo() {
+		return damageCA_Mewtwo;
 	}
 };
 
@@ -274,6 +359,7 @@ int main() {
 	cout << "-----------------------" << endl;
 
 	Mewtwo boski2("Mewtwo", 5, 5, 5, 14.5);
+	Move boskiMove;
 	FastMove boskiFast; 
 	ChargedMove boskiCharged;
 
@@ -294,10 +380,13 @@ int main() {
 	cout << endl;
 	cout << "Quick Move (Fast Attack): " << boskiFast.getMoveTypeFA_Mewtwo();
 	cout << endl;
+	cout << boskiFast.getMoveTypeFA_Mewtwo() << " damage: " << boskiFast.getDamageFA_Mewtwo();
+	cout << endl;
 	cout << "Main Move (Charge Attack): " << boskiCharged.getMewtwoMoveTypeCA();
 	cout << endl;
+	cout << boskiCharged.getMewtwoMoveTypeCA() << " damage: " << boskiCharged.getDamageCA_Mewtwo();
+	cout << endl;
 	cout << "------------------------------------" << endl;
-	
 
 	Rayquaza boski3("Rayquaza", 5, 5, 5, 14.5);
 
@@ -320,7 +409,11 @@ int main() {
 	cout << endl;
 	cout << "Quick Move (Fast Attack): " << boskiFast.getMoveTypeFA_Rayquaza();
 	cout << endl;
+	cout << boskiFast.getMoveTypeFA_Rayquaza() << " damage: " << boskiFast.getDamageFA_Rayquaza();
+	cout << endl;
 	cout << "Main Move (Charge Attack): " << boskiCharged.getRayquazaMoveTypeCA();
+	cout << endl;
+	cout << boskiCharged.getRayquazaMoveTypeCA() << " damage: " << boskiCharged.getDamageCA_Rayquaza();
 	cout << endl;
 
 	return 0;
