@@ -165,7 +165,7 @@ public:
 class Move {
 protected:
 	string moveTypeFA, moveTypeCA;
-	int damageFA_Rayquaza, damageFA_Mewtwo, damageCA_Rayquaza, damageCA_Mewtwo, turns, energy_gain, energy_cost;
+	int damageFA_Rayquaza, damageFA_Mewtwo, energy, damageCA_Rayquaza, damageCA_Mewtwo, turns, energyFA_Mewtwo, energyCA_Mewtwo, energyFA_Rayquaza, energyCA_Rayquaza, energy_gain, energy_cost;
 public:
 	Move() {
 		moveTypeFA = "0";
@@ -175,56 +175,69 @@ public:
 		damageCA_Rayquaza = 0;
 		damageCA_Mewtwo = 0;
 		turns = 0;
+		energyFA_Rayquaza = 0;
+		energyFA_Mewtwo = 0;
+		energyCA_Rayquaza = 0;
+		energyCA_Mewtwo = 0;
 		energy_gain = 0;
 		energy_cost = 0;
 	}
-	Move(string moveTypeFA, string moveTypeCA, int damageFA_Rayquaza, int damageFA_Mewtwo, int damageCA_Rayquaza, int damageCA_Mewtwo) {
+
+	Move(string moveTypeFA, string moveTypeCA, int damageFA_Rayquaza, int damageFA_Mewtwo, int damageCA_Rayquaza, int damageCA_Mewtwo, int energyFA_Mewtwo, int energyFA_Rayquaza,
+		int energyCA_Rayquaza, int energyCA_Mewtwo) 
+	{
 		this->moveTypeFA = moveTypeFA;
 		this->moveTypeCA = moveTypeCA;
 		this->damageFA_Rayquaza = damageFA_Rayquaza;
 		this->damageFA_Mewtwo = damageFA_Mewtwo;
 		this->damageCA_Rayquaza = damageCA_Rayquaza;
 		this->damageCA_Mewtwo = damageCA_Mewtwo;
-	}
-
-	int getTurns() {
-		return turns;
+		this->energyFA_Mewtwo = energyFA_Mewtwo;
+		this->energyFA_Rayquaza = energyFA_Rayquaza;
+		this->energyCA_Mewtwo = energyCA_Mewtwo;
+		this->energyCA_Rayquaza = energyCA_Rayquaza;
 	}
 };
 
 class FastMove : public Move {
 public:
-	double stab;
-	int randomMewtwo, randomRayquaza;
+	double stab, HP1, HP2;
+	int randomMewtwo, randomRayquaza, randomEnergyFA_Rayquaza;
 	string randomFA_Mewtwo, randomFA_Rayquaza;
 	FastMove() {
 		static string MewtwoMoveTypeFA[2] = { "Psycho Cut", "Confusion" };
 		static string RayquazaMoveTypeFA[2] = { "Dragon Tail", "Air Slash" };
+		static int energyFA_Rayquaza[2] = { 9, 9 };
+		static int energyFA_Mewtwo[2] = { 9, 12 };
 		randomRayquaza = rand() % 2;
 		randomFA_Rayquaza = RayquazaMoveTypeFA[randomRayquaza];
 		randomMewtwo = rand() % 2;
-		randomFA_Mewtwo = MewtwoMoveTypeFA[randomMewtwo];
+		randomFA_Mewtwo = MewtwoMoveTypeFA[randomMewtwo]; 
 
 		if (randomFA_Rayquaza == "Dragon Tail") {
 			stab = 0.2;
+			energy_gain = 9;
 			damageFA_Rayquaza = 15;
 		}
 
 		else if (randomFA_Rayquaza == "Air Slash") {
 			stab = 0.2;
+			energy_gain = 10;
 			damageFA_Rayquaza = 14;
 		}
 
 		if (randomFA_Mewtwo == "Psycho Cut") {
 			stab = 0.2;
+			energy_gain = 8;
 			damageFA_Mewtwo = 5;
 		}
 		else if (randomFA_Mewtwo == "Confusion") {
 			stab = 0.2;
+			energy_gain = 15;
 			damageFA_Mewtwo = 20;
 		}
 	}
-		
+
 	string getMoveTypeFA_Rayquaza() {
 		return randomFA_Rayquaza;
 	}
@@ -257,62 +270,76 @@ public:
 
 		if (randomCA_Rayquaza == "Aerial Ace") {
 			stab = 0.2;
+			energy_cost = 33;
 			damageCA_Rayquaza = 55;
 		}
 
 		else if (randomCA_Rayquaza == "Outrage") {
 			stab = 0.2;
+			energy_cost = 50;
 			damageCA_Rayquaza = 110;
 		}
 
 		else if (randomCA_Rayquaza == "Hurricane") {
 			stab = 0.2;
+			energy_cost = 100;
 			damageCA_Rayquaza = 110;
 		}
 
 		else if (randomCA_Rayquaza == "Ancient Power") {
+			energy_cost = 33;
 			damageCA_Rayquaza = 70;
 		}
 
 		if (randomCA_Mewtwo == "Psychic") {
 			stab = 0.2;
+			energy_cost = 50;
 			damageCA_Mewtwo = 90;
 		}
 
 		else if (randomCA_Mewtwo == "Psystrike") {
 			stab = 0.2;
+			energy_cost = 50;
 			damageCA_Mewtwo = 90;
 		}
 
 		else if (randomCA_Mewtwo == "Flamethrower") {
+			energy_cost = 50;
 			damageCA_Mewtwo = 70;
 		}
 
 		else if (randomCA_Mewtwo == "Ice Beam") {
+			energy_cost = 50;
 			damageCA_Mewtwo = 90;
 		}
 
 		else if (randomCA_Mewtwo == "Thunderbolt") {
+			energy_cost = 50;
 			damageCA_Mewtwo = 80;
 		}
 
-		else if (randomCA_Mewtwo == "Focus Blast") {  
+		else if (randomCA_Mewtwo == "Focus Blast") { 
+			energy_cost = 100;
 			damageCA_Mewtwo = 140;
 		}
 
 		else if (randomCA_Mewtwo == "Shadow Ball") {
+			energy_cost = 50;
 			damageCA_Mewtwo = 100;
 		}
 
 		else if (randomCA_Mewtwo == "Hyper Beam") {
+			energy_cost = 100;
 			damageCA_Mewtwo = 150;
 		}
 
 		else if (randomCA_Mewtwo == "Frustration") {
+			energy_cost = 33;
 			damageCA_Mewtwo = 10;
 		}
 
 		else if (randomCA_Mewtwo == "Return") {
+			energy_cost = 33;
 			damageCA_Mewtwo = 35;
 		}
 	}
@@ -337,9 +364,15 @@ public:
 int main() {
 	srand(time(nullptr));
 
-	Charizard boski("Charizard", 5, 5, 5, 14.5);
+	//Charizard boski("Charizard", 5, 5, 5, 13.5);
+	Mewtwo boski1("Mewtwo", 5, 5, 5, 13.5);
+	Rayquaza boski2("Rayquaza", 5, 5, 5, 13.5);
+	Move boskiMove;
+	FastMove boskiFast;
+	ChargedMove boskiCharged;
+	
 
-	boski.powerUp();
+	/*boski.powerUp();
 	cout << "Ime pokemona: " << boski.getName();
 	cout << endl;
 	cout << "Type1 pokemona: " << boski.getType1();
@@ -356,17 +389,39 @@ int main() {
 	cout << endl;
 	cout << "Combat Power: " << boski.getCP();
 	cout << endl;
-	cout << "-----------------------" << endl;
+	cout << "-----------------------" << endl; */
 
-	Mewtwo boski2("Mewtwo", 5, 5, 5, 14.5);
-	Move boskiMove;
-	FastMove boskiFast; 
-	ChargedMove boskiCharged;
+	boski1.powerUp();
+	cout << "Ime pokemona: " << boski1.getName();
+	cout << endl;
+	cout << "Type pokemona: " << boski1.getType1();
+	cout << endl;
+	cout << "Attack: " << boski1.getAttack();
+	cout << endl;
+	cout << "Defense: " << boski1.getDefense();
+	cout << endl;
+	cout << "Stamina: " << boski1.getStamina();
+	cout << endl;
+	cout << "Max HP: " << boski1.getMaxHP();
+	cout << endl;
+	cout << "Combat Power: " << boski1.getCP();
+	cout << endl;
+	cout << "Quick Move (Fast Attack): " << boskiFast.getMoveTypeFA_Mewtwo();
+	cout << endl;
+	cout << boskiFast.getMoveTypeFA_Mewtwo() << " base damage: " << boskiFast.getDamageFA_Mewtwo();
+	cout << endl;
+	cout << "Main Move (Charge Attack): " << boskiCharged.getMewtwoMoveTypeCA();
+	cout << endl;
+	cout << boskiCharged.getMewtwoMoveTypeCA() << " base damage: " << boskiCharged.getDamageCA_Mewtwo();
+	cout << endl;
+	cout << "------------------------------------" << endl;
 
 	boski2.powerUp();
 	cout << "Ime pokemona: " << boski2.getName();
 	cout << endl;
-	cout << "Type pokemona: " << boski2.getType1();
+	cout << "Type1 pokemona: " << boski2.getType1();
+	cout << endl;
+	cout << "Type2 pokemona: " << boski2.getType2();
 	cout << endl;
 	cout << "Attack: " << boski2.getAttack();
 	cout << endl;
@@ -378,43 +433,33 @@ int main() {
 	cout << endl;
 	cout << "Combat Power: " << boski2.getCP();
 	cout << endl;
-	cout << "Quick Move (Fast Attack): " << boskiFast.getMoveTypeFA_Mewtwo();
-	cout << endl;
-	cout << boskiFast.getMoveTypeFA_Mewtwo() << " damage: " << boskiFast.getDamageFA_Mewtwo();
-	cout << endl;
-	cout << "Main Move (Charge Attack): " << boskiCharged.getMewtwoMoveTypeCA();
-	cout << endl;
-	cout << boskiCharged.getMewtwoMoveTypeCA() << " damage: " << boskiCharged.getDamageCA_Mewtwo();
-	cout << endl;
-	cout << "------------------------------------" << endl;
-
-	Rayquaza boski3("Rayquaza", 5, 5, 5, 14.5);
-
-	boski3.powerUp();
-	cout << "Ime pokemona: " << boski3.getName();
-	cout << endl;
-	cout << "Type1 pokemona: " << boski3.getType1();
-	cout << endl;
-	cout << "Type2 pokemona: " << boski3.getType2();
-	cout << endl;
-	cout << "Attack: " << boski3.getAttack();
-	cout << endl;
-	cout << "Defense: " << boski3.getDefense();
-	cout << endl;
-	cout << "Stamina: " << boski3.getStamina();
-	cout << endl;
-	cout << "Max HP: " << boski3.getMaxHP();
-	cout << endl;
-	cout << "Combat Power: " << boski3.getCP();
-	cout << endl;
 	cout << "Quick Move (Fast Attack): " << boskiFast.getMoveTypeFA_Rayquaza();
 	cout << endl;
-	cout << boskiFast.getMoveTypeFA_Rayquaza() << " damage: " << boskiFast.getDamageFA_Rayquaza();
+	cout << boskiFast.getMoveTypeFA_Rayquaza() << " base damage: " << boskiFast.getDamageFA_Rayquaza();
 	cout << endl;
 	cout << "Main Move (Charge Attack): " << boskiCharged.getRayquazaMoveTypeCA();
 	cout << endl;
-	cout << boskiCharged.getRayquazaMoveTypeCA() << " damage: " << boskiCharged.getDamageCA_Rayquaza();
+	cout << boskiCharged.getRayquazaMoveTypeCA() << " base damage: " << boskiCharged.getDamageCA_Rayquaza();
+	cout << endl << "------------------------------------" << endl;
+	 
+
+
+	double HP1_FA, HP1_CA, HP2_FA, HP2_CA;
+	cout << "Mewtwo's Fast Attack: " << boskiFast.getMoveTypeFA_Mewtwo() << endl;
+	cout << "Mewtwo's Charge Attack: " << boskiCharged.getMewtwoMoveTypeCA() << endl;
+	cout << "Rayquaza's Fast Attack: " << boskiFast.getMoveTypeFA_Rayquaza() << endl;
+	cout << "Rayquaza's Charge Attack: " << boskiCharged.getRayquazaMoveTypeCA() << endl;
+
+	HP1_FA = boski1.getMaxHP() - floor(0.65 * boskiFast.getDamageFA_Rayquaza() * boski2.getAttack() / boski1.getDefense()); //Rayquaza's attack on Mewtwo with fast attack
+	HP2_FA = boski2.getMaxHP() - floor(0.65 * boskiFast.getDamageFA_Mewtwo() * boski1.getAttack() / boski2.getDefense()); //Mewtwo's attack on Rayquaza with fast attack
+	HP1_CA = boski1.getMaxHP() - floor(0.65 * boskiCharged.getDamageCA_Rayquaza() * boski2.getAttack() / boski1.getDefense()); // Rayquaza's attack on Mewtwo with charge attack
+	HP2_CA = boski2.getMaxHP() - floor(0.65 * boskiCharged.getDamageCA_Mewtwo() * boski1.getAttack() / boski2.getDefense()); // Mewtwo's attack on Rayquaza with charge attack
+
 	cout << endl;
+	cout << "Reamining health on Mewtwo: " << HP1_FA << endl;
+	cout << "Reamining health on Rayquaza: " << HP2_FA << endl;
+	cout << "Remaining health on Mewtwo: " << HP1_CA << endl;
+	cout << "Remaining health on Rayquaza " << HP2_CA << endl;
 
 	return 0;
 }
