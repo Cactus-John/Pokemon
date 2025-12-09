@@ -9,7 +9,20 @@ class Pokemon {
 protected:
     string name, Type1, Type2, moveTypeFA, moveTypeCA;
     double level, base_attack, base_defense, base_stamina, iv_attack, iv_defense, iv_stamina, maxHP, currentHP;
+    vector<Pokemon> pokemons;
 public:
+    double getFastAttackOnPokemon1(double hp1_fa);
+    double getFastAttackOnPokemon2(double hp2_fa);
+    double getChargedAttackOnPokemon1(double hp1_ca);
+    double getChargedAttackOnPokemon2(double hp2_ca);
+    void takeDamageFA1(double hp1_fa);
+    void takeDamageCA1(double hp1_ca);
+    void takeDamageFA2(double hp2_fa);
+    void takeDamageCA2(double hp2_ca);
+    bool operator==(const Pokemon& left) const;
+    friend istream& operator>>(istream& input, Pokemon& pokemon);
+    friend ostream& operator<<(ostream& output, Pokemon& pokemon);
+
     double attack, defense, stamina, CP, CPM;
     double arrayCPM[101] = { 0.094, 0.1351374318, 0.16639787, 0.192650919,
                              0.21573247, 0.2365726613, 0.25572005, 0.2735303812,
@@ -44,27 +57,7 @@ public:
         level = 0;
     }
 
-    Pokemon(string name, double iv_attack, double iv_defense, double iv_stamina, double level) {
-        this->name = name;
-        this->iv_attack = iv_attack;
-        this->iv_defense = iv_defense;
-        this->iv_stamina = iv_stamina;
-        this->level = level;
-    }
-
-    void setName(string name) {
-        this->name = name;
-    }
-
-    void powerUp() {
-        CPM = arrayCPM[(int)(this->level * 2) - 2];
-        if (level == 1 && level < 40)
-            level = level + 0.5;
-        else
-            level = level + 1;
-    }
-
-    double getLevel() const { return (double)level; }
+    [[nodiscard]] double getLevel() const { return level; }
 
     double getAttack() {
         attack = (base_attack + iv_attack) * CPM;
@@ -91,21 +84,113 @@ public:
         return maxHP;
     }
 
-    double getCurrentHP()  {
-        currentHP = maxHP - currentHP;
+    void initializeHP() {
+        currentHP = getMaxHP();
+    }
+
+    [[nodiscard]] double getCurrentHP() const {
         return currentHP;
     }
 
-    string getName() const {
+    void powerUp() {
+        CPM = arrayCPM[static_cast<int>(this->level * 2) - 2];
+        if (level == 1 && level < 40)
+            level += 0.5;
+        else
+            level += 1;
+    }
+
+    void setName(string name) {
+        this->name = name;
+    }
+
+    Pokemon(string name, double iv_attack, double iv_defense, double iv_stamina, double level) {
+        this->name = name;
+        this->iv_attack = iv_attack;
+        this->iv_defense = iv_defense;
+        this->iv_stamina = iv_stamina;
+        this->level = level;
+        initializeHP();
+    }
+
+    void printPokemons() const {
+        for (const auto & pokemon : pokemons)
+            cout << "Name: " << pokemon.getName() << endl;
+        cout << endl;
+    }
+
+    [[nodiscard]] string getName() const {
         return name;
     }
 
-    string getType1() const {
+    [[nodiscard]] string getType1() const {
         return Type1;
     }
 
-    string getType2() const {
+    [[nodiscard]] string getType2() const {
         return Type2;
     }
 };
+
+inline double Pokemon::getFastAttackOnPokemon1(const double hp1_fa) {
+    return hp1_fa;
+}
+
+inline double Pokemon::getFastAttackOnPokemon2(const double hp2_fa) {
+    return hp2_fa;
+}
+
+inline double Pokemon::getChargedAttackOnPokemon1(const double hp1_ca) {
+    return hp1_ca;
+}
+
+inline double Pokemon::getChargedAttackOnPokemon2(const double hp2_ca) {
+    return hp2_ca;
+}
+
+//FAST ATTACK CAST ON POKEMON1
+inline void Pokemon::takeDamageFA1(const double hp1_fa) {
+    currentHP -= getFastAttackOnPokemon1(hp1_fa);
+    if (currentHP <= 0)
+        currentHP = 0;
+}
+
+//FAST ATTACK CAST ON POKEMON2
+inline void Pokemon::takeDamageFA2(const double hp2_fa) {
+    currentHP -= getFastAttackOnPokemon1(hp2_fa);
+    if (currentHP <= 0)
+        currentHP = 0;
+}
+
+//CHARGED ATTACK CAST ON POKEMON1
+inline void Pokemon::takeDamageCA1(const double hp1_ca) {
+    currentHP -= getFastAttackOnPokemon1(hp1_ca);
+    if (currentHP <= 0)
+        currentHP = 0;
+}
+
+//CHARGED ATTACK CAST ON POKEMON2
+inline void Pokemon::takeDamageCA2(const double hp2_ca) {
+    currentHP -= getFastAttackOnPokemon1(hp2_ca);
+    if (currentHP <= 0)
+        currentHP = 0;
+}
+
+inline bool Pokemon::operator==(const Pokemon& left) const {
+    return this->name == left.name;
+}
+
+inline istream& operator>>(istream& input, Pokemon& pokemon) {
+    input >> pokemon.name;
+    return input;
+}
+
+inline ostream& operator<<(ostream& output, Pokemon& pokemon) {
+    output << "Pokemon name: " << pokemon.name << endl << "Pokemon type1: " << pokemon.getType1() << endl
+    << "Pokemon type2: " << pokemon.getType2() << endl << "Attack: " << pokemon.getAttack() << endl
+    << "Defense: " << pokemon.getDefense() << endl << "Stamina: " << pokemon.getStamina() << endl
+    << "Max HP: " << pokemon.getMaxHP() << endl << "Combat power: " << pokemon.getCP() << endl;
+    return output;
+}
+
 #endif // POKEMON_H
