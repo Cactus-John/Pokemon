@@ -2,12 +2,17 @@
 #include <cmath>
 #include <algorithm>
 #include <string>
+#include <vector>
 #include "moves/chargemove.h"
 #include "moves/fastmove.h"
 #include "moves/moves.h"
 #include "pokemons/mewtwo.h"
 #include "pokemons/rayquaza.h"
 #include "game_logic/game.h"
+#include "pokemons/arbok.h"
+#include "pokemons/charizard.h"
+#include "pokemons/nidoking.h"
+#include "pokemons/pikachu.h"
 using namespace std;
 
 int main() {
@@ -19,6 +24,19 @@ int main() {
     Move boskiMove;
     FastMove boskiFast;
     ChargedMove boskiCharged;
+
+    vector <Pokemon> pokemons {
+        Arbok("Arbok", 3, 3, 3, 10),
+        Charizard("Charizard", 3, 3, 3, 10),
+        Nidoking("Nidoking", 3, 3, 3, 10),
+        Pikachu("Pikachu", 3, 3, 3, 10),
+        //Mewtwo("Mewtwo", 5, 5, 5, 13.5),
+        //Rayquaza("Rayquaza", 5, 5, 5, 13.5)
+    };
+    for (int i = 0; i < pokemons.size(); i++)
+        cout << pokemons[i].getName() << "  ";
+    cout << endl;
+
 
     // Mewtwo stats
     boski1.powerUp();
@@ -82,6 +100,7 @@ int main() {
     cout << "Rayquaza's Charge Attack: " << boskiCharged.getRayquazaMoveTypeCA() << endl;
     cout << boskiCharged.getRayquazaMoveTypeCA() << " damage: " << floor(0.65 * boskiCharged.getDamageCA_Rayquaza() * boski2.getAttack() / boski1.getDefense() * boskiCharged.getSTAB_CA_Rayquaza() * boskiCharged.getEFF_CA_Rayquaza()) << endl;
 
+    for (int i = 0; i < 2; i++) cout << endl;
 
     //Rayquaza's attack on Mewtwo with fast attack
     double HP1_FA =
@@ -103,18 +122,25 @@ int main() {
         boski2.getMaxHP() - floor(0.65 * boskiCharged.getDamageCA_Mewtwo() * boski1.getAttack() /
         boski2.getDefense() * boskiCharged.getSTAB_CA_Mewtwo() * boskiCharged.getEFF_CA_Mewtwo()) + 1;
 
-    //double currentHP_boski1 = HP2_CA;
-    //double currentHP_boski2 = HP1_CA;
-    //cout << currentHP_boski1 << endl;
-
     cout << endl;
     cout << "HP left on Mewtwo if fast attack was used: " << HP1_FA << endl;
     cout << "HP left on Rayquaza if fast attack was used: " << HP2_FA << endl;
     cout << "HP left on Mewtwo if charged move was used: " << HP1_CA << endl;
     cout << "HP left on Rayquaza if charged move was used: " << HP2_CA << endl;
 
-    if (bool pokemonCheck = lastPokemonStanding(boski1))
-        cout << "dead1";
+
+
+    // GAME LOGIC
+
+    Pokemon pokemonInput1, pokemonInput2;
+    cout << "Enter the first pokemon you want to play: ";
+    cin >> pokemonInput1;
+    cout << endl;
+    cout << "Enter the second pokemon you want to play: ";
+    cin >> pokemonInput2;
+    cout << endl;
+    gameLogic(pokemonInput1, pokemonInput2, HP1_FA, HP2_FA, HP1_CA, HP2_CA);
+
 
     return 0;
 }
